@@ -6,10 +6,22 @@ import os
 import tempfile
 import base64
 import io
-import sys
 import os
+import sys
 
+# Download potrace if not present
 POTRACE = os.path.join(os.path.dirname(__file__), "bin", "potrace")
+
+if not os.path.exists(POTRACE):
+    os.makedirs(os.path.dirname(POTRACE), exist_ok=True)
+    subprocess.run([
+        "curl", "-L",
+        "https://potrace.sourceforge.net/download/1.16/potrace-1.16.linux-x86_64.tar.gz",
+        "-o", "/tmp/potrace.tar.gz"
+    ], check=True)
+    subprocess.run(["tar", "xz", "-C", "/tmp", "-f", "/tmp/potrace.tar.gz"], check=True)
+    subprocess.run(["cp", "/tmp/potrace-1.16.linux-x86_64/potrace", POTRACE], check=True)
+    os.chmod(POTRACE, 0o755)
 
 app = Flask(__name__, static_folder=".", static_url_path="")
 
