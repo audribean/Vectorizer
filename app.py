@@ -6,6 +6,10 @@ import os
 import tempfile
 import base64
 import io
+import sys
+import os
+
+POTRACE = os.path.join(os.path.dirname(__file__), "bin", "potrace")
 
 app = Flask(__name__, static_folder=".", static_url_path="")
 
@@ -57,7 +61,8 @@ def process():
 
     #run potrace for dxf
     result = subprocess.run([
-        "potrace",
+        #"potrace",
+        POTRACE,
         bmp_path,
         "--backend", "dxf",
         "--turdsize", str(turdsize),
